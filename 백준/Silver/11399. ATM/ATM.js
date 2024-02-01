@@ -1,12 +1,16 @@
 let input = require('fs').readFileSync('/dev/stdin').toString().split('\n');
-// let input = [5, `3 1 4 3 2`];
 
+// const input = require('fs').readFileSync("./input.txt").toString().trim().split('\n');
+
+//입력 다 받음
 let N = Number(input[0]);
-let arr = input[1].split(' ').map(Number);
-let sortArr = arr.sort((a, b) => a - b);
+let orderArr = input[1].split(" ").map(Number);
+orderArr.sort((a,b)=>a-b)
 let result = 0;
-
-for(let i=0; i<N; i++){
-    result += sortArr[i]*(N-i);    
-};
-console.log(result);
+for (let i = 1; i < orderArr.length; i++){
+    orderArr[i] += orderArr[i-1]
+}
+orderArr.forEach(num =>{
+    result += num;
+})
+console.log(result)
