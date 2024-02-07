@@ -1,28 +1,35 @@
-const filePath = process.platform === 'linux' ? 'dev/stdin' : './input.txt';
-const input = require('fs').readFileSync(filePath).toString().trim().split('\n');
-const A = input[1].split(' ').map(v=>+v); // 탐색 대상
-const B = input[3].split(' ').map(v=>+v);
-let answer = [];
-A.sort((a,b) => a - b); // 탐색대상을 정렬
-B.forEach(v => {
-    let start = 0; // 탐색대상의 처음
-    let end = A.length - 1;  // 탐색대상의 끝
-    let res = false;
-    while (start <= end) {
-        let mid = parseInt((start + end) / 2); // 탐색대상의 시작과 끝의 중간값
-        if (v < A[mid]) { // B배열의 요소가 탐색 대상의 중간값보다 작으면 중간값에 -1을 해서 탐색범위를 반으로 줄임
-            end = mid - 1; // 
-        } else if (v > A[mid]) { // 반대로 크면, 중간값 + 1해서 탐색 범위를 줄여줌
-            start = mid + 1;
-        } else {
-            res = true;
+// const input = require('fs').readFileSync("./input.txt").toString().trim().split('\n');
+let input = require('fs').readFileSync('/dev/stdin').toString().split('\n');
+
+const N = Number(input[0])
+const targetNum = input[1].split(" ").map(Number);
+const M = Number(input[2])
+const numLst = input[3].split(" ").map(Number);
+
+targetNum.sort((a,b)=> a- b)
+
+let answer = '';
+
+for (let num of numLst){
+    flag = false;
+    let start = 0;
+    let end = N-1;
+    while (start <= end){
+        let mid = Math.floor((start + end)/2)
+        if(targetNum[mid] > num){
+            end = mid-1;
+        }else if (targetNum[mid] < num){
+            start = mid+1;
+        }else{
+            answer += '1\n';
+            flag = true;
             break;
         }
+
     }
-    if (res === true) {
-        answer.push(1);
-    } else {
-        answer.push(0);
+    if(!flag){
+        answer += '0\n'
     }
-})
-console.log(answer.join('\n'));
+}
+
+console.log(answer)
