@@ -14,7 +14,7 @@ const [[totalDays, days], visitor] = require("fs")
 let sumVisitor = visitor.slice(0,days).reduce((sum,cur)=>sum+cur,0);
 let maxVisitor = sumVisitor;
 let maxCnt = 1; 
-for(let i=0; i<totalDays-days;i++){
+for(let i=0; i<=totalDays-days;i++){
     sumVisitor -= visitor[i]
     sumVisitor += visitor[i+days]
     if(sumVisitor >maxVisitor ){
@@ -31,30 +31,3 @@ if(maxVisitor===0){
     console.log(maxVisitor);
     console.log(maxCnt);
 }
-
-
-// 시간 초과
-// for (let i=0; i <= totalDays-days; i++){
-//     let countVisitor = 0;
-//     for(let j=0; j < days; j++){
-//         countVisitor += visitor[i+j]
-//     }
-//     if(sumVisitor<countVisitor){
-//         sumVisitor = countVisitor
-//     }
-// }
-// //최댓값 계산 완료
-// for (let i=0; i <= totalDays-days; i++){
-//     let countVisitor = 0;
-//     for(let j=0; j < days; j++){
-//         countVisitor += visitor[i+j]
-//     }
-//     if(countVisitor === sumVisitor){
-//         maxCnt += 1
-//     }
-
-// }
-
-
-
-
