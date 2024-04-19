@@ -1,20 +1,17 @@
 function round(num){
-    if(num%2n===0n){
-        return num/2n
+    if(num%2===0){
+        return num/2
     }
-    return num/2n + 1n
+    return Math.floor(num/2) + 1
 }
 
 function solution(n,a,b)
 {
     var answer = 1;
     let matching = [];
-    n = BigInt(n)
-    a = BigInt(a)
-    b = BigInt(b)
-    for(let i= 1n;i<n;i++){
-        if(i%2n){
-            matching.push([i,i+1n])
+    for(let i= 1;i<n;i++){
+        if(i%2){
+            matching.push([i,i+1])
         }
     }
     while(true){
@@ -25,7 +22,6 @@ function solution(n,a,b)
             b = round(b);
             answer++
         }
-        console.log(a,b)
     }    
     return answer;
 }
