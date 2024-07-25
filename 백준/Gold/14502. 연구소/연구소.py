@@ -1,68 +1,58 @@
-from itertools import combinations
-from collections import deque
+
 import sys
+from collections import deque
+from itertools import combinations
+
+# 연구소는 크기가 N*M
+# 벽은 3개
+# 바이러스 2 벽 1 빈칸 0
+
+# 벽을 3개 세우는 조합을 찾고, 바이러스를 퍼트리기.;
 input = sys.stdin.readline
-#✅ 입력 형식에 맞춰 입력값을 받는다.
 n, m = map(int,input().split())
 board = [list(map(int,input().split())) for _ in range(n)]
-max_cnt = 0
 
-# 벽 조합 찾기
-empty = []
+
+empty, virus = [],[]
 for i in range(n):
     for j in range(m):
         if board[i][j] == 0:
-            empty.append([i,j])
+            empty.append((i,j))
+        elif board[i][j] == 2:
+            virus.append((i,j))
 
-def bfs(): #바이러스 퍼트리기
-    queue = deque()
-    tmp = [board[i][:] for i in range(n)]  # board의 복사본 생성
-
+max_cnt = 0            
+def bfs():
+    global max_cnt
+    queue = deque(virus)
+    tmp = [board[i][:] for i in range(n)]
+    
+    while queue:
+        cr, cc= queue.popleft()
+        for dr, dc in [[0,-1],[0,1],[1,0],[-1,0]]:
+            nr = dr + cr
+            nc = dc + cc
+            # 범위 내의, 0인거
+            if 0<= nr< n and 0<= nc <m and tmp[nr][nc] == 0:
+                tmp[nr][nc] = 2
+                queue.append((nr,nc))
+    cnt = 0
     for i in range(n):
         for j in range(m):
-            if board[i][j] == 2:
-                queue.append((i, j))  # 바이러스 위치를 큐에 추가
-
-    while queue:
-        ci, cj = queue.popleft()
-        for di, dj in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
-            ni, nj = ci + di, cj + dj
-            # 범위 내이고 0이고 방문안했다면 퍼트리기
-            if 0 <= ni < n and 0 <= nj < m and tmp[ni][nj] == 0:
-                tmp[ni][nj] = 2
-                queue.append((ni, nj))
-    #cnt 크기 찾기
-    cnt = 0
-    for r in range(n):
-        for c in range(m):
-            if tmp[r][c] == 0:
+            if tmp[i][j] == 0:
                 cnt += 1
-    global max_cnt
-    if cnt > max_cnt:
+    if max_cnt < cnt:
         max_cnt = cnt
-    return
-             
-# 모든 벽을 세울 수 있는 조합을 만든다
-# 벽을 세운 뒤에 2가 있는 지점을 찾아서 바이러스를 퍼트린다(bfs) 근데 실제 board를 변형하면 안되고
-# 
-# cboard 돌면서 0개수 세기.
-# max_cnt 갱신
 
-
-
-# 벽 세우기 (모든 조합을 찾아서 )
-for new_wall in combinations(empty,3):
+for walls in combinations(empty,3):
     row = []
     col = []
-    for r, c in new_wall:
+    for r,c in walls:
         row.append(r)
         col.append(c)
-        if board[r][c] !=0:
-            break
-    else:
-        for i in range(3):
-            board[row[i]][col[i]] = 1
-        bfs()
-        for i in range(3):
-            board[row[i]][col[i]] =0
+    for i in range(3):
+        board[row[i]][col[i]] = 1 #벽세우기
+    bfs()
+    for i in range(3):
+        board[row[i]][col[i]] = 0
 print(max_cnt)
