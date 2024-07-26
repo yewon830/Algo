@@ -31,17 +31,17 @@ def solution(board):
         
         
     # 갈 수 있는 방법
-    position = set([(1,1),(1,2)])
+    position = [(1,1),(1,2)]
     queue = deque()
     queue.append((position,0)) #횟수
     visited = set()
-    visited.add(frozenset(position)) #set을 hash로 만듦
+    visited.add(frozenset(position))#set을 hash로 만듦
     while queue:
         cur_position, cnt = queue.popleft()
         if (n,n) in cur_position:
             return cnt
         for next_position in move(cur_position):
             if frozenset(next_position) not in visited:
-                queue.append((next_position, cnt+1))
+                queue.append((frozenset(next_position), cnt+1))
                 visited.add(frozenset(next_position))
         
