@@ -1,49 +1,57 @@
 from collections import deque
 def solution(places):
-    answer = []
-    #p면은
-    #bfs를 2칸까지 도는 데, 방문 안했고 + 범위 내고 + X가 아닐때만 돈다
-    #만약 안에 P가 있으면 바로 False
-    #cnt가 2를 넘으면 바로 True
+    # 5*5 단위를 n번 돌아야 함
+    # bfs를 X가 아닐때만 거리2까지 돌고 그 이상이면 True, 
+    # 그 사이에 P가 있다면 False
+    result = []
     
-    def bfs(r,c, place):
-        queue = deque()
-        queue.append((r,c,0))
-        visited = [[0]*5 for _ in range(5)] 
+    def bfs(r,c,place):
+        queue = deque([(r,c,0)])
+        visited = [[0]*5 for _ in range(5)]
         visited[r][c] = 1
+        
         while queue:
             cr, cc, cnt = queue.popleft()
-            if cnt > 1:
-                return True
-            for dr, dc in [[-1,0],[1,0],[0,-1],[0,1]]:
-                nr = cr + dr
-                nc = cc + dc
-                if (0<= nr < 5 and 0<=nc<5 
-                    and not visited[nr][nc] 
-                    and place[nr][nc] != 'X'):
-                    if place[nr][nc] == 'P':
+            for dr, dc in [[-1,0],[1,0],[0,1],[0,-1]]:
+                nr = dr + cr
+                nc = dc + cc
+                ncnt = cnt + 1
+                # 범위 내 방문 x, X아닌거
+                if (0<=nr<5 and 0<=nc<5
+                    and not visited[nr][nc]
+                    and place[nr][nc] != 'X'
+                   ):
+                    if ncnt > 2:
+                        continue
+                    if place[nr][nc] == 'P': #거리x
                         return False
-                    queue.append((nr,nc,cnt+1))
-                    visited[nr][nc] = 1 
+                    queue.append((nr,nc,ncnt))
+                    visited[nr][nc] = 1
         return True
-            
+                
     
     
-    # 배열이 3중
-    #한 칸씩 검증
+    
+    
     def check(place):
         for i in range(5):
             for j in range(5):
-                if place[i][j] == 'P':
-                    if not bfs(i,j, place): #만약 거리두가 안된게 있으면
+                if place[i][j] == 'P': #사람이면은
+                    if not bfs(i,j,place): #거리 못지킨 사람 있으면
                         return False
         return True
-                        
         
+    
+    
     for place in places:
+        # 단위별로 확인
         if check(place):
-            answer.append(1)
+            result.append(1)
         else:
-            answer.append(0)
+            result.append(0)
+    return result
             
-    return answer
+    
+    
+    
+    
