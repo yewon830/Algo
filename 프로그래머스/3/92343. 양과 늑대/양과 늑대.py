@@ -1,28 +1,31 @@
 def solution(info, edges):
-    # 백트래킹
-    # 백트래킹인데, 뒤로 돌아갈 수 있다. 부모는 방문했는데, 자식은 방문안했다면 방문 가능
-    
+    #해당 노드를 가면 양, 늑대를 모을 수 있음
+    # 양 > 늑대이면 양 보존 가능
+    # 양<늑대이면 모든 양 x
+    # 부모 노드는 방문했는데 자식 노드는 방문 안한 것을 가야함.
+    # 완전탐색으로 모든 경우의 수를 살핀다.
+    visited = [0]*len(info)
     answer= 0
-    visited = [0]* len(info)
-    visited[0] = 1
+    visited[0] = 1  
     def backTracking(sheep,wolf):
+        #양<늑대
         nonlocal answer
-        if sheep > wolf:
-            if sheep > answer:
-                answer = sheep
-        else:
+        if wolf >= sheep:
             return
+        if answer < sheep:
+            answer = sheep
+            
+        
         for p,c in edges:
-            if visited[p] == 1 and not visited[c]:
+            if visited[p] and not visited[c]:
                 visited[c] = 1
-                if info[c] == 0:
+                if info[c] == 0: #양이면
                     backTracking(sheep+1, wolf)
                 else:
                     backTracking(sheep,wolf+1)
                 visited[c] = 0
+    
     backTracking(1,0)
+    
     return answer
-            
-        
-        
-        
+    
